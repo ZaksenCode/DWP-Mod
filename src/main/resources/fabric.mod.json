@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "dwp",
+  "version": "${version}",
+  "name": "Dwp",
+  "description": "DiamondWorld mod :3",
+  "authors": [
+    "Zaksen"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/dwp/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "zaksen.dwp.client.DwpClient"
+    ],
+    "main": [
+      "zaksen.dwp.Dwp"
+    ]
+  },
+  "mixins": [
+    "dwp.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.11",
+    "fabric": "*",
+    "minecraft": "1.19.2"
+  }
+}
