@@ -4,8 +4,7 @@
   "menu.dwp.settings_title": "Settings",
   "key.category.dwp": "DW Plus",
   "key.dwp.main_menu": "Open mod menu",
-
-  "dwp.bosses.boss1": "Древний лучник",
-  "dwp.bosses.boss2": "Слизь",
-  "dwp.bosses.boss3": "Стальной страж"
+  "dwp.menu.settings_minbosses": "Minimal boss columns",
+  "dwp.menu.settings_show_list": "Show Bosses List",
+  "dwp.menu.settings_scroll_value": "Boss menu scroll speed"
 }

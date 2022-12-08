@@ -3,5 +3,8 @@
   "menu.dwp.bosses_title": "Боссы",
   "menu.dwp.settings_title": "Настройки",
   "key.category.dwp": "DW Plus",
-  "key.dwp.main_menu": "Открыть меню мода"
+  "key.dwp.main_menu": "Открыть меню мода",
+  "dwp.menu.settings_minbosses": "Минимально столбов боссов",
+  "dwp.menu.settings_show_list": "Отображать список боссов",
+  "dwp.menu.settings_scroll_value": "Скорость прокрутки меню боссов"
 }

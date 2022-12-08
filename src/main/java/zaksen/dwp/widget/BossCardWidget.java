@@ -23,9 +23,9 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
 import zaksen.dwp.Dwp;
+import zaksen.dwp.client.DwpClient;
 
 import java.util.List;
-import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class BossCardWidget extends AbstractParentElement implements Drawable, Element, Selectable {
@@ -36,15 +36,16 @@ public class BossCardWidget extends AbstractParentElement implements Drawable, E
     private boolean focused;
     protected boolean hovered;
     public int x;
+    public int defaultX;
     public int y;
-    protected float alpha = 1.0F;
+    protected float alpha = 0.85F;
     private Text Timer;
     private Text Name;
     private LivingEntity RenderEntity;
     public boolean selected = false;
     public BossScrollerWidget parent;
     public MinecraftClient client;
-
+    public DwpClient.Boss cardBoss;
 
     public boolean changeFocus(boolean lookForwards) {
         if (this.active) {
@@ -84,14 +85,16 @@ public class BossCardWidget extends AbstractParentElement implements Drawable, E
         return true;
     }
 
-    public BossCardWidget(MinecraftClient client, int x, int y, int width, int height, @Nullable LivingEntity entity)
+    public BossCardWidget(MinecraftClient client, int x, int y, int width, int height, @Nullable LivingEntity entity, DwpClient.Boss cardBoss)
     {
         this.client = client;
         this.x = x;
+        this.defaultX = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.RenderEntity = entity;
+        this.cardBoss = cardBoss;
     }
 
     @Override
@@ -109,8 +112,14 @@ public class BossCardWidget extends AbstractParentElement implements Drawable, E
         } else if (hovered && children().stream().noneMatch(element -> element.isMouseOver(mouseX, mouseY))) {
             drawTexture(matrices, x, y, 0, 0, 146, 180, 256, 256);
         }
+        this.Timer = cardBoss.getTimer();
         renderIcon(matrices, index, x, y, mouseX, mouseY, hovered, tickDelta);
         RenderSystem.disableBlend();
+    }
+
+    public void tick()
+    {
+        cardBoss.tick();
     }
 
     protected void renderIcon(MatrixStack matrices, int index, int x, int y, int mouseX, int mouseY, boolean hovered, float tickDelta) {
@@ -128,8 +137,8 @@ public class BossCardWidget extends AbstractParentElement implements Drawable, E
         this.drawTexture(matrices, this.x + this.width / 2, this.y, 146 - this.width / 2, 0, this.width / 2, this.height);
         this.renderBackground(matrices, minecraftClient, mouseX, mouseY);
         int j = this.active ? 16777215 : 10526880;
-        drawCenteredText(matrices, textRenderer, this.getName(), this.x + this.width / 2, this.y + 15, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
-        drawCenteredText(matrices, textRenderer, this.getTimer(), this.x + this.width / 2, this.y + 30, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredText(matrices, textRenderer, this.getName(), this.x + this.width / 2, this.y + 5, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredText(matrices, textRenderer, this.getTimer(), this.x + this.width / 2, this.y + 20, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
         float look_x = (float)(this.x + (this.width / 2)) - mouseX;
         float look_y = (float)(this.y + (this.height / 2)) - mouseY;
         if(RenderEntity != null)
@@ -154,8 +163,8 @@ public class BossCardWidget extends AbstractParentElement implements Drawable, E
         this.drawTexture(matrices, this.x + this.width / 2, this.y, 146 - this.width / 2, 0, this.width / 2, this.height);
         this.renderBackground(matrices, minecraftClient, mouseX, mouseY);
         int j = this.active ? 16777215 : 10526880;
-        drawCenteredText(matrices, textRenderer, this.getName(), this.x + this.width / 2, this.y + 15, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
-        drawCenteredText(matrices, textRenderer, this.getTimer(), this.x + this.width / 2, this.y + 30, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredText(matrices, textRenderer, this.getName(), this.x + this.width / 2, this.y + 5, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredText(matrices, textRenderer, this.getTimer(), this.x + this.width / 2, this.y + 20, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
         float look_x = (float)(this.x + (this.width / 2)) - mouseX;
         float look_y = (float)(this.y + (this.height / 2)) - mouseY;
         if(RenderEntity != null)

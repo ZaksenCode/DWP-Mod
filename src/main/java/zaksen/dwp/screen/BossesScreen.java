@@ -2,13 +2,11 @@ package zaksen.dwp.screen;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import zaksen.dwp.client.DwpClient;
-import zaksen.dwp.widget.BossCardWidget;
 import zaksen.dwp.widget.BossScrollerWidget;
 
 import static zaksen.dwp.screen.ScreenTextures.Vanilla_Theme;
@@ -39,21 +37,9 @@ public class BossesScreen extends Screen {
                 150 * DwpClient.Bosses.size()
         );
         BossScroller.updateEntries();
+
         this.addDrawableChild(BossScroller);
     }
-
-    private void loadBossesWindow(BossCardWidget entry) {
-        BossCardWidget bossCardWidget = new BossCardWidget(
-                MinecraftClient.getInstance(), 30, 30, 146, 180, null
-        );
-        fixChildren();
-    }
-
-    private void fixChildren()
-    {
-
-    }
-
 
     public void tick() {
         super.tick();

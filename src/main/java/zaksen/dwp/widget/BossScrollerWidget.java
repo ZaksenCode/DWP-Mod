@@ -10,7 +10,9 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import zaksen.dwp.Dwp;
 import zaksen.dwp.client.DwpClient;
+import zaksen.dwp.misc.ModConfigs;
 
 import java.util.List;
 
@@ -43,6 +45,14 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
         this.y = y;
     }
 
+    public void tick()
+    {
+        for(BossCardWidget entry : entries)
+        {
+            entry.tick();
+        }
+    }
+
     public void updateEntries() {
         entries.clear();
         allEntries.clear();
@@ -51,10 +61,10 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
         int xCard = 30;
         for (DwpClient.Boss boss : DwpClient.Bosses)
         {
-            BossCardWidget ThisCard = new BossCardWidget(MinecraftClient.getInstance(), xCard, yCard, 146, 180, boss.getBossEntity());
+            BossCardWidget ThisCard = new BossCardWidget(MinecraftClient.getInstance(), xCard, yCard, 146, 180, boss.getBossEntity(), boss);
             entries.add(ThisCard);
             ThisCard.setName(boss.getName());
-            ThisCard.setTimer(Text.empty());
+            ThisCard.setTimer(boss.getTimer());
             ThisCard.parent = this;
             xCard += 150;
         }
@@ -70,16 +80,8 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
         return 180;
     }
 
-    private int getEntryX(BossCardWidget child) {
-        return x + getEntries().indexOf(child) * 150 - scroll;
-    }
-
-    private int getEntryY(BossCardWidget child) {
-        return y;
-    }
-
     private int getMaxScroll() {
-        return Math.max(0, getEntries().size() * 150 - width);
+        return (getEntries().size() * 150) - (ModConfigs.minBosses * 150);
     }
 
     @Override
@@ -91,11 +93,11 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
                 (int) ((double) width * scaleFactor),
                 Integer.MAX_VALUE
         );
-        var players = getEntries();
-        for (int i = 0; i < players.size(); i++) {
-            var entry = players.get(i);
-            var x = getEntryX(entry);
-            var y = getEntryY(entry);
+        var bosses = getEntries();
+        for (int i = 0; i < bosses.size(); i++) {
+            var entry = bosses.get(i);
+            int x = entry.defaultX - scroll;
+            int y = entry.y;
             entry.directRender(
                     matrices, i, x, y, mouseX, mouseY,
                     mouseX >= x && mouseX < x + entry.getWidth() && mouseY >= y && mouseY < y + entry.getHeight(),
@@ -116,11 +118,15 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        scroll -= amount * 150;
-        if (scroll < 0) {
-            scroll = 0;
-        } else if (scroll > getMaxScroll()) {
-            scroll = getMaxScroll();
+        this.scroll += amount * ModConfigs.scrollValue;
+        if (this.scroll < 0) {
+            this.scroll = 0;
+        } else if (this.scroll > getMaxScroll()) {
+            this.scroll = getMaxScroll();
+        }
+        for(BossCardWidget Boss : getEntries())
+        {
+            Boss.updatePosition(Boss.defaultX - scroll, Boss.y);
         }
         return true;
     }
