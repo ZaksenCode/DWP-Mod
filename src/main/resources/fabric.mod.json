@@ -17,6 +17,9 @@
     ],
     "main": [
       "zaksen.dwp.Dwp"
+    ],
+    "modmenu": [
+      "zaksen.dwp.modmenu.ModMenuIntegration"
     ]
   },
   "mixins": [

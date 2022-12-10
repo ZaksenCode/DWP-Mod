@@ -117,11 +117,6 @@ public class BossCardWidget extends AbstractParentElement implements Drawable, E
         RenderSystem.disableBlend();
     }
 
-    public void tick()
-    {
-        cardBoss.tick();
-    }
-
     protected void renderIcon(MatrixStack matrices, int index, int x, int y, int mouseX, int mouseY, boolean hovered, float tickDelta) {
         RenderSystem.setShaderTexture(0, CARD_TEXTURE);
         drawTexture(matrices, x, y, 146, 180, 0, 0, 146, 180, 256, 256);

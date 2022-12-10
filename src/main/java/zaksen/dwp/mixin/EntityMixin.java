@@ -48,7 +48,7 @@ public class EntityMixin
                                         if(boss.getName().getString().equals(lastBossName.replaceFirst("Босс ", "")))
                                         {
                                             boss.setTimer(entityName);
-                                            Dwp.LOG.info(Arrays.toString(boss.getTimerAsValue()));
+                                            Dwp.LOG.info(Arrays.toString(boss.getTimerValue()));
                                             lastBossName = null;
                                             break;
                                         }

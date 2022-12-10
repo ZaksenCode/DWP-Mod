@@ -9,10 +9,9 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import zaksen.dwp.Dwp;
 import zaksen.dwp.client.DwpClient;
-import zaksen.dwp.misc.ModConfigs;
+import zaksen.dwp.config.DwpConfig;
 
 import java.util.List;
 
@@ -45,14 +44,6 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
         this.y = y;
     }
 
-    public void tick()
-    {
-        for(BossCardWidget entry : entries)
-        {
-            entry.tick();
-        }
-    }
-
     public void updateEntries() {
         entries.clear();
         allEntries.clear();
@@ -81,7 +72,7 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
     }
 
     private int getMaxScroll() {
-        return (getEntries().size() * 150) - (ModConfigs.minBosses * 150);
+        return (getEntries().size() * 150) - (DwpConfig.minBosses * 150);
     }
 
     @Override
@@ -118,7 +109,7 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        this.scroll += amount * ModConfigs.scrollValue;
+        this.scroll += amount * Dwp.CONFIG.scrollValue;
         if (this.scroll < 0) {
             this.scroll = 0;
         } else if (this.scroll > getMaxScroll()) {

@@ -4,7 +4,11 @@
   "menu.dwp.settings_title": "Settings",
   "key.category.dwp": "DW Plus",
   "key.dwp.main_menu": "Open mod menu",
-  "dwp.menu.settings_minbosses": "Minimal boss columns",
-  "dwp.menu.settings_show_list": "Show Bosses List",
-  "dwp.menu.settings_scroll_value": "Boss menu scroll speed"
+
+  "text.autoconfig.dwp.option.scrollValue": "Scroll strength",
+  "text.autoconfig.dwp.option.minBosses": "Minimal boss columns",
+  "text.autoconfig.dwp.option.showBossesList": "Show Bosses List",
+  "text.autoconfig.dwp.option.bossesListX": "Bosses list position(width)",
+  "text.autoconfig.dwp.option.bossesListY": "Bosses list position(height)",
+  "text.autoconfig.dwp.option.fontColor": "Font color"
 }

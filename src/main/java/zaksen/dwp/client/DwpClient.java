@@ -46,73 +46,112 @@ public class DwpClient implements ClientModInitializer
             this.timer = Text.of(newTime);
         }
 
-        public String[] getTimerAsValue()
-        {
-            String[] numbers = getTimer().getString().split(" ");
-            String[] newNumbers = new String[2];
-            String lastNumber = null;
-            int counter = 0;
-            for(String number : numbers)
-            {
-                if(number != "час." || number != "мин." || number != "сек.")
-                {
-                    lastNumber = number;
-                }
-                else if(lastNumber != null)
-                {
-                    newNumbers[counter] = lastNumber + "" + number;
-                }
-            }
-            return newNumbers;
-        }
-
-        int timerUpdater;
+        int ticker;
         public void tick()
         {
-            if(timerUpdater > 0)
+            if(ticker > 0)
             {
-                timerUpdater -= 1;
+                updateTimer();
+                ticker = 20;
             }
             else
             {
-                updateTimerByValue(getTimerAsValue());
-                timerUpdater = 20;
+                ticker -= 1;
             }
         }
 
-        public void updateTimerByValue(String[] numbers)
+        public void updateTimer()
         {
-            String finalTimer = null;
-            String addToTimer = null;
-
-            Dwp.LOG.info(numbers.toString());
-            for(String number : numbers)
+            int[] numbers = getTimerValue();
+            for(int i = 0; i < numbers.length / 2; i++)
             {
-                Dwp.LOG.info(number);
-
-                String[] numbers2 = number.split(" ");
-                int timerNum = 0;
-                for(String number2 : numbers2)
+                int temp = numbers[i];
+                numbers[i] = numbers[numbers.length - i - 1];
+                numbers[numbers.length - i - 1] = temp;
+            }
+            boolean null_sec = false;
+            boolean null_min = false;
+            boolean null_hour = false;
+            boolean next_minus = false;
+            for(int number : numbers)
+            {
+                if(next_minus)
                 {
-                    if(!number.contains("."))
+                    if(number == 0)
                     {
-                        timerNum = Integer.parseInt(number2);
+                        continue;
                     }
                     else
                     {
-                        Dwp.LOG.info(timerNum + "");
-                        if(timerNum > 0)
-                        {
-                            addToTimer = timerNum - 1 + "" + number;
-                            Dwp.LOG.info(addToTimer);
-                        }
+                        number -= 1;
+                        next_minus = false;
+                        continue;
                     }
                 }
-                finalTimer += addToTimer;
+
+                if(number == 0 && !null_sec)
+                {
+                    null_sec = true;
+                }
+                else if (number == 0 && !null_min)
+                {
+                    null_min = true;
+                }
+                else if (number == 0 && !null_hour)
+                {
+                    null_hour = true;
+                }
+
+                if(null_sec && null_min && null_hour)
+                {
+                    timer = null;
+                    break;
+                }
+
+                if(!null_sec)
+                {
+                    number -= 1;
+                }
+                else
+                {
+                    number = 60;
+                    next_minus = true;
+                    continue;
+                }
+
+                if(!null_min)
+                {
+                    number -= 1;
+                }
+                else
+                {
+                    number = 60;
+                    next_minus = true;
+                }
             }
+        }
 
-
-            setTimer(finalTimer);
+        public int[] getTimerValue()
+        {
+            String timerStr = getTimer().getString();
+            int[] result = new int[3];
+            if(timerStr != null)
+            {
+                int counter = 0;
+                timerStr = timerStr.replaceAll("ч.","").replaceAll("мин.","").replaceAll("сек.","");
+                String[] numbers = timerStr.split("  ");
+                for(String number : numbers)
+                {
+                    number = number.replaceAll(" ", "");
+                    result[counter] = Integer.parseInt(number);
+                    counter++;
+                }
+            }
+            else
+            {
+                result = null;
+            }
+            return result;
         }
     }
 
