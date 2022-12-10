@@ -109,7 +109,7 @@ public class BossScrollerWidget extends AbstractParentElement implements Drawabl
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        this.scroll += amount * Dwp.CONFIG.scrollValue;
+        this.scroll -= amount * Dwp.CONFIG.scrollValue;
         if (this.scroll < 0) {
             this.scroll = 0;
         } else if (this.scroll > getMaxScroll()) {

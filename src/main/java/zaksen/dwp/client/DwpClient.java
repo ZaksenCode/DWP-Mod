@@ -12,6 +12,7 @@ import zaksen.dwp.screen.ScreenTextures;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -51,100 +52,54 @@ public class DwpClient implements ClientModInitializer
         {
             if(ticker > 0)
             {
-                updateTimer();
-                ticker = 20;
+                ticker -= 1;
             }
             else
             {
-                ticker -= 1;
+                updateTimer();
+                ticker = 20;
             }
         }
 
-        public void updateTimer()
-        {
-            int[] numbers = getTimerValue();
-            for(int i = 0; i < numbers.length / 2; i++)
-            {
-                int temp = numbers[i];
-                numbers[i] = numbers[numbers.length - i - 1];
-                numbers[numbers.length - i - 1] = temp;
+
+        public void updateTimer() {
+            List<Integer> numbers = new ArrayList<>(Arrays.stream(getTimerValue()).boxed().toList());
+            var seconds = (numbers.get(0) * 3600) + (numbers.get(1) * 60) + numbers.get(2);
+            if(seconds > 3600){
+                seconds--;
+                int h = seconds / 3600;
+                int m = (seconds - h * 3600) / 60;
+                int s = (seconds - h * 3600) - m * 60;
+                Dwp.LOG.info("Sec: " + seconds + " → " + h + " ч. " + m + " мин. " + s + " сек.");
+                this.setTimer(h + " ч. " + m + " мин. " + s + " сек.");
             }
-            boolean null_sec = false;
-            boolean null_min = false;
-            boolean null_hour = false;
-            boolean next_minus = false;
-            for(int number : numbers)
-            {
-                if(next_minus)
-                {
-                    if(number == 0)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        number -= 1;
-                        next_minus = false;
-                        continue;
-                    }
-                }
-
-                if(number == 0 && !null_sec)
-                {
-                    null_sec = true;
-                }
-                else if (number == 0 && !null_min)
-                {
-                    null_min = true;
-                }
-                else if (number == 0 && !null_hour)
-                {
-                    null_hour = true;
-                }
-
-                if(null_sec && null_min && null_hour)
-                {
-                    timer = null;
-                    break;
-                }
-
-                if(!null_sec)
-                {
-                    number -= 1;
-                }
-                else
-                {
-                    number = 60;
-                    next_minus = true;
-                    continue;
-                }
-
-                if(!null_min)
-                {
-                    number -= 1;
-                }
-                else
-                {
-                    number = 60;
-                    next_minus = true;
-                }
+            else if (3600 > seconds && seconds > 0) {
+                seconds--;
+                int m = seconds / 60;
+                int s = seconds - m * 60;
+                Dwp.LOG.info("Sec: " + seconds + " → " + m + " мин. " + s + " сек.");
+                this.setTimer(m + " мин. " + s + " сек.");
+            }
+            else{
+                this.timer = Text.of(0 + " мин. " + 0 + " сек.");
             }
         }
-
         public int[] getTimerValue()
         {
             String timerStr = getTimer().getString();
             int[] result = new int[3];
             if(timerStr != null)
             {
-                int counter = 0;
+                int counter = 2;
                 timerStr = timerStr.replaceAll("ч.","").replaceAll("мин.","").replaceAll("сек.","");
                 String[] numbers = timerStr.split("  ");
-                for(String number : numbers)
+                List<String> numbers2 = new ArrayList<>(Arrays.stream(numbers).toList());
+                Collections.reverse(numbers2);
+                for(String number : numbers2)
                 {
                     number = number.replaceAll(" ", "");
                     result[counter] = Integer.parseInt(number);
-                    counter++;
+                    counter--;
                 }
             }
             else
