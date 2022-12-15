@@ -15,6 +15,7 @@ public class DwpConfig implements ConfigData
 
     public int scrollValue = 150;
     public static int minBosses = 3;
+    public int nearestBossesCount = 5;
     public boolean  showBossesList = false;
     public int bossesListX = 10, bossesListY = 10;
     public int fontColor = 16777215;

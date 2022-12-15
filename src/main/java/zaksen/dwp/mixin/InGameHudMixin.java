@@ -9,6 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import zaksen.dwp.Dwp;
+import zaksen.dwp.client.DwpClient;
+
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin
 {
@@ -23,6 +25,12 @@ public abstract class InGameHudMixin
             if(Dwp.CONFIG.showBossesList)
             {
                 this.getTextRenderer().drawWithShadow(matrices, "Ближайшие Боссы:", Dwp.CONFIG.bossesListX, Dwp.CONFIG.bossesListY, Dwp.CONFIG.fontColor);
+                int startYValue = Dwp.CONFIG.bossesListY + 10;
+                for(String boss : DwpClient.getNearestBosses())
+                {
+                    this.getTextRenderer().drawWithShadow(matrices, boss, Dwp.CONFIG.bossesListX, startYValue, Dwp.CONFIG.fontColor);
+                    startYValue += 10;
+                }
             }
         }
     }

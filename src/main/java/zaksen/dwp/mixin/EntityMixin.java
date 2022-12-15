@@ -48,7 +48,6 @@ public class EntityMixin
                                         if(boss.getName().getString().equals(lastBossName.replaceFirst("Босс ", "")))
                                         {
                                             boss.setTimer(entityName);
-                                            Dwp.LOG.info("Entity Mixin" + Arrays.toString(boss.getTimerValue()));
                                             lastBossName = null;
                                             break;
                                         }
@@ -60,9 +59,8 @@ public class EntityMixin
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception ignore)
         {
-            Dwp.LOG.warn("EntityMixin: " + e);
         }
     }
 }
